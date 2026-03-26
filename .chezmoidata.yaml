@@ -3,6 +3,13 @@ paths:
   openjdk_bin_darwin: "/opt/homebrew/opt/openjdk/bin"
 
 git:
+  user:
+    name: "Sean Feng"
+    email: "fengxiang220@gmail.com"
+  pokemon:
+    name: "Sean Feng"
+    email: "fengx@pokemon.com.cn"
+    remote_prefix: "https://codeup.aliyun.com/6324319dcc40ef8169940024/"
   credential_helpers:
     darwin: osxkeychain
     linux: store

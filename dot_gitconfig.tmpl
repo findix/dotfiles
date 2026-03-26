@@ -1,5 +1,12 @@
-{{- $helper := index .git.credential_helpers .chezmoi.os -}}
-{{- if $helper -}}
+[user]
+	name = {{ .git.user.name }}
+	email = {{ .git.user.email }}
+
+[includeIf "hasconfig:remote.*.url:{{ .git.pokemon.remote_prefix }}**"]
+	path = ~/.gitconfig-pokemon
+
+{{ $helper := index .git.credential_helpers .chezmoi.os -}}
+{{- if $helper }}
 [credential]
 	helper = {{ $helper }}
 {{- end }}
