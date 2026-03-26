@@ -6,6 +6,21 @@ set -eu
 REPO_URL="${DOTFILES_REPO_URL:-https://github.com/findix/dotfiles.git}"
 CHEZMOI_BIN="${HOME}/.local/bin/chezmoi"
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+BACKUP_ROOT="${HOME}/.dotfiles-bootstrap-backup"
+
+MANAGED_PATHS='
+.zshrc
+.zprofile
+.gitconfig
+.gitconfig-pokemon
+.p10k.zsh
+.tmux.conf
+.vimrc
+.ssh/config
+.local/bin/env
+.local/bin/git-credential-bitwarden
+.config/btop/btop.conf
+'
 
 has_cmd() {
   command -v "$1" >/dev/null 2>&1
@@ -13,6 +28,25 @@ has_cmd() {
 
 log() {
   printf 'dotfiles-bootstrap: %s\n' "$*"
+}
+
+confirm() {
+  prompt="$1"
+  if [ ! -t 0 ]; then
+    log "当前不是交互终端，默认不覆盖现有配置。"
+    return 1
+  fi
+
+  printf '%s [y/N] ' "$prompt" >&2
+  read -r answer
+  case "$answer" in
+    y|Y|yes|YES)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
 }
 
 run_sudo() {
@@ -233,12 +267,55 @@ setup_bitwarden_session() {
 }
 
 run_chezmoi() {
+  chezmoi_cmd="chezmoi"
   if has_cmd chezmoi; then
-    chezmoi init --apply "$REPO_URL"
+    :
+  else
+    chezmoi_cmd="${CHEZMOI_BIN}"
+  fi
+
+  "${chezmoi_cmd}" init "$REPO_URL"
+}
+
+backup_existing_files() {
+  timestamp="$(date +%Y%m%d-%H%M%S)"
+  backup_dir="${BACKUP_ROOT}/${timestamp}"
+  copied=0
+
+  printf '%s\n' "$MANAGED_PATHS" | while IFS= read -r rel_path; do
+    [ -n "$rel_path" ] || continue
+    src="${HOME}/${rel_path}"
+    dest="${backup_dir}/${rel_path}"
+
+    if [ -e "$src" ] || [ -L "$src" ]; then
+      mkdir -p "$(dirname "$dest")"
+      cp -R "$src" "$dest"
+      copied=1
+    fi
+  done
+
+  if [ -d "$backup_dir" ]; then
+    log "已备份现有受管文件到 ${backup_dir}"
+  fi
+}
+
+preview_and_apply_chezmoi() {
+  chezmoi_cmd="chezmoi"
+  if ! has_cmd chezmoi; then
+    chezmoi_cmd="${CHEZMOI_BIN}"
+  fi
+
+  backup_existing_files
+  log "以下是即将应用的配置差异："
+  "${chezmoi_cmd}" diff || true
+
+  if confirm "确认覆盖这些受管文件并继续 apply 吗？"; then
+    "${chezmoi_cmd}" apply
     return
   fi
 
-  "${CHEZMOI_BIN}" init --apply "$REPO_URL"
+  log "已取消 apply。你可以稍后手动执行 chezmoi diff / chezmoi apply。"
+  exit 0
 }
 
 install_tmux_plugins() {
@@ -258,6 +335,7 @@ main() {
   install_tpm
   setup_bitwarden_session
   run_chezmoi
+  preview_and_apply_chezmoi
   install_tmux_plugins
   log "完成。建议重新打开 shell。"
 }

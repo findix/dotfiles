@@ -49,10 +49,14 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/findix/dotfiles/main/scrip
 - 安装 Meslo Nerd Font
 - 安装 `vim_runtime`
 - 安装 `tmux` TPM
-- 初始化并应用 dotfiles
+- 初始化 dotfiles
+- 备份现有受管文件
+- 预览 `chezmoi diff`
+- 交互确认后再 `chezmoi apply`
 
 注意：
 脚本会安装 Powerlevel10k 需要的字体文件，但终端软件里的字体选择通常仍需要手动切到 `MesloLGS NF`。
+首次接入时，已存在的受管文件会先备份到 `~/.dotfiles-bootstrap-backup/<timestamp>/`，然后展示 diff，确认后才会覆盖。
 
 如果需要手动分步执行，再看下面的细分步骤。
 
