@@ -7,6 +7,10 @@ git:
     darwin: osxkeychain
     linux: cache --timeout=7200
 
+bitwarden:
+  items:
+    github_login: "github.com"
+
 hosts:
   Seans-MacBook-Pro:
     enable_lmstudio: true

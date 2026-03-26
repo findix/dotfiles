@@ -75,3 +75,13 @@ bash ~/.tmux/plugins/tpm/bin/install_plugins
 当前仓库先把 Bitwarden 作为标准 secret 后端和前置依赖约定下来；当某个配置需要 secret 时，模板中直接通过 `bw` CLI 获取，不写入仓库明文。
 
 如果 `bw` 未安装或未登录，可以先运行 `~/.local/share/chezmoi/scripts/check-prereqs.sh` 获取提示，再继续处理 secret 相关配置。
+
+当前已经接入一个真实场景：GitHub 的 Git credential helper。
+
+在执行 `git push`、`git pull` 之前，先在当前 shell 解锁并导出 session：
+
+```bash
+export BW_SESSION="$(bw unlock --raw)"
+```
+
+之后 Git 会通过 `~/.local/bin/git-credential-bitwarden` 从 Bitwarden 的 `github.com` 条目读取凭据。
