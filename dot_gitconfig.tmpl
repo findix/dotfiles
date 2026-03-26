@@ -1,0 +1,5 @@
+{{- $helper := index .git.credential_helpers .chezmoi.os -}}
+{{- if $helper -}}
+[credential]
+	helper = {{ $helper }}
+{{- end }}

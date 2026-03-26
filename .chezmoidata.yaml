@@ -1,0 +1,13 @@
+paths:
+  lmstudio_bin_rel: ".lmstudio/bin"
+  openjdk_bin_darwin: "/opt/homebrew/opt/openjdk/bin"
+
+git:
+  credential_helpers:
+    darwin: osxkeychain
+    linux: cache --timeout=7200
+
+hosts:
+  Seans-MacBook-Pro:
+    enable_lmstudio: true
+    enable_orbstack: true
