@@ -34,7 +34,23 @@
 
 ## 新设备接入
 
-`chezmoi` 只负责同步和渲染配置文件，不负责自动安装 `oh-my-zsh`、`powerlevel10k`、`vim_runtime`、`tpm` 这类依赖。新机器需要先装基础依赖，再执行 `chezmoi init` / `chezmoi apply`。
+推荐直接执行一条命令完成引导：
+
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/findix/dotfiles/main/scripts/bootstrap.sh)"
+```
+
+这个脚本会尽量自动完成：
+
+- 安装基础依赖
+- 安装 `chezmoi`
+- 安装 `oh-my-zsh`
+- 安装 `powerlevel10k`
+- 安装 `vim_runtime`
+- 安装 `tmux` TPM
+- 初始化并应用 dotfiles
+
+如果需要手动分步执行，再看下面的细分步骤。
 
 ### macOS
 
