@@ -9,7 +9,7 @@ git:
 
 bitwarden:
   items:
-    github_login: "github.com"
+    github_pat: "github.com PAT"
 
 hosts:
   Seans-MacBook-Pro:
