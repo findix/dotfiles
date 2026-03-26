@@ -49,6 +49,16 @@ brew_install_if_missing() {
   brew install "$pkg"
 }
 
+brew_install_cask_if_missing() {
+  cask_name="$1"
+  if brew list --cask "$cask_name" >/dev/null 2>&1; then
+    return
+  fi
+
+  log "安装 ${cask_name}"
+  brew install --cask "$cask_name"
+}
+
 linux_pkg_install() {
   if has_cmd apt-get; then
     run_sudo apt-get update
@@ -138,6 +148,38 @@ install_powerlevel10k() {
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$target"
 }
 
+install_nerd_font() {
+  case "$OS" in
+    darwin)
+      install_homebrew
+      brew tap homebrew/cask-fonts >/dev/null 2>&1 || true
+      brew_install_cask_if_missing font-meslo-lg-nerd-font
+      ;;
+    linux)
+      font_dir="${HOME}/.local/share/fonts"
+      target="${font_dir}/MesloLGS NF Regular.ttf"
+      if [ -f "$target" ]; then
+        return
+      fi
+
+      log "安装 Meslo Nerd Font"
+      mkdir -p "$font_dir"
+      archive="/tmp/meslo-nerd-font.zip"
+      curl -fsSL -o "$archive" https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF.zip
+      if has_cmd unzip; then
+        unzip -o "$archive" -d "$font_dir" >/dev/null
+      else
+        log "缺少 unzip，无法自动解压字体，请手动安装后重试。"
+        return
+      fi
+
+      if has_cmd fc-cache; then
+        fc-cache -f "$font_dir" >/dev/null 2>&1 || true
+      fi
+      ;;
+  esac
+}
+
 install_vim_runtime() {
   if [ -d "${HOME}/.vim_runtime" ]; then
     return
@@ -211,6 +253,7 @@ main() {
   install_chezmoi
   install_oh_my_zsh
   install_powerlevel10k
+  install_nerd_font
   install_vim_runtime
   install_tpm
   setup_bitwarden_session

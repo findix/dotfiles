@@ -46,9 +46,13 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/findix/dotfiles/main/scrip
 - 安装 `chezmoi`
 - 安装 `oh-my-zsh`
 - 安装 `powerlevel10k`
+- 安装 Meslo Nerd Font
 - 安装 `vim_runtime`
 - 安装 `tmux` TPM
 - 初始化并应用 dotfiles
+
+注意：
+脚本会安装 Powerlevel10k 需要的字体文件，但终端软件里的字体选择通常仍需要手动切到 `MesloLGS NF`。
 
 如果需要手动分步执行，再看下面的细分步骤。
 
@@ -62,23 +66,26 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/findix/dotfiles/main/scrip
    `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
 4. 安装 `powerlevel10k`
    `git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k`
-5. 安装 `vim_runtime`
+5. 安装 Nerd Font
+   `brew tap homebrew/cask-fonts && brew install --cask font-meslo-lg-nerd-font`
+6. 安装 `vim_runtime`
    `git clone https://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_awesome_vimrc.sh`
-6. 登录 Bitwarden
+7. 登录 Bitwarden
    `bw login`
-7. 初始化 dotfiles
+8. 初始化 dotfiles
    `chezmoi init https://github.com/findix/dotfiles.git`
-8. 可选：先检查依赖状态
+9. 可选：先检查依赖状态
    `~/.local/share/chezmoi/scripts/check-prereqs.sh`
-9. 应用配置
+10. 应用配置
    `chezmoi apply`
-10. 安装 tmux TPM 插件管理器
+11. 安装 tmux TPM 插件管理器
    `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
-11. 安装 tmux 插件
+12. 安装 tmux 插件
    `bash ~/.tmux/plugins/tpm/bin/install_plugins`
 
 说明：
 当前仓库已经纳管 `~/.p10k.zsh`，`chezmoi apply` 后会直接还原 Powerlevel10k 配置。
+但终端字体仍需要你在 Terminal / iTerm2 / Warp / Kitty 等软件中手动切换到 `MesloLGS NF`。
 
 ### Linux
 
@@ -88,19 +95,21 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/findix/dotfiles/main/scrip
    `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
 4. 安装 `powerlevel10k`
    `git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k`
-5. 安装 `vim_runtime`
+5. 安装 Nerd Font
+   将 `MesloLGS NF` 安装到用户字体目录，并在终端中手动切换字体
+6. 安装 `vim_runtime`
    `git clone https://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_awesome_vimrc.sh`
-6. 登录 Bitwarden
+7. 登录 Bitwarden
    `bw login`
-7. 初始化 dotfiles
+8. 初始化 dotfiles
    `chezmoi init https://github.com/findix/dotfiles.git`
-8. 可选：先检查依赖状态
+9. 可选：先检查依赖状态
    `~/.local/share/chezmoi/scripts/check-prereqs.sh`
-9. 应用配置
+10. 应用配置
    `chezmoi apply`
-10. 安装 tmux TPM 插件管理器
+11. 安装 tmux TPM 插件管理器
    `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
-11. 安装 tmux 插件
+12. 安装 tmux 插件
    `bash ~/.tmux/plugins/tpm/bin/install_plugins`
 
 说明：
