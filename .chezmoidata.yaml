@@ -5,7 +5,7 @@ paths:
 git:
   credential_helpers:
     darwin: osxkeychain
-    linux: cache --timeout=7200
+    linux: store
 
 bitwarden:
   items:

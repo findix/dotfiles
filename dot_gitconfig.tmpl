@@ -4,6 +4,8 @@
 	helper = {{ $helper }}
 {{- end }}
 
+{{- if eq .chezmoi.os "darwin" }}
 [credential "https://github.com"]
 	helper =
 	helper = "!$HOME/.local/bin/git-credential-bitwarden"
+{{- end }}

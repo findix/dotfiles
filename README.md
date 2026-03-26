@@ -2,6 +2,8 @@
 
 使用 `chezmoi` 管理的个人 dotfiles，目标是同时支持 macOS 和 Linux。
 
+远端仓库：`https://github.com/findix/dotfiles.git`
+
 ## 当前纳管范围
 
 - `~/.zshrc`
@@ -31,33 +33,61 @@
 
 ## 新设备接入
 
+`chezmoi` 只负责同步和渲染配置文件，不负责自动安装 `oh-my-zsh`、`powerlevel10k`、`vim_runtime`、`tpm` 这类依赖。新机器需要先装基础依赖，再执行 `chezmoi init` / `chezmoi apply`。
+
 ### macOS
 
 1. 安装 `chezmoi`
    `brew install chezmoi`
 2. 安装 `bw`
    `brew install bitwarden-cli`
-3. 登录 Bitwarden
+3. 安装 `oh-my-zsh`
+   `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+4. 安装 `powerlevel10k`
+   `git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k`
+5. 安装 `vim_runtime`
+   `git clone https://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_awesome_vimrc.sh`
+6. 登录 Bitwarden
    `bw login`
-4. 初始化 dotfiles
-   `chezmoi init <dotfiles-repo>`
-5. 可选：先检查依赖状态
+7. 初始化 dotfiles
+   `chezmoi init https://github.com/findix/dotfiles.git`
+8. 可选：先检查依赖状态
    `~/.local/share/chezmoi/scripts/check-prereqs.sh`
-6. 应用配置
+9. 应用配置
    `chezmoi apply`
+10. 安装 tmux TPM 插件管理器
+   `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
+11. 安装 tmux 插件
+   `bash ~/.tmux/plugins/tpm/bin/install_plugins`
+
+说明：
+当前仓库没有纳管 `~/.p10k.zsh`。如果新机器没有这个文件，Powerlevel10k 主题可以正常加载，但提示符细节需要你自己运行 `p10k configure` 生成。
 
 ### Linux
 
 1. 安装 `chezmoi`
 2. 安装 `bw`
-3. 登录 Bitwarden
+3. 安装 `oh-my-zsh`
+   `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+4. 安装 `powerlevel10k`
+   `git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/custom/themes/powerlevel10k`
+5. 安装 `vim_runtime`
+   `git clone https://github.com/amix/vimrc.git ~/.vim_runtime && sh ~/.vim_runtime/install_awesome_vimrc.sh`
+6. 登录 Bitwarden
    `bw login`
-4. 初始化 dotfiles
-   `chezmoi init <dotfiles-repo>`
-5. 可选：先检查依赖状态
+7. 初始化 dotfiles
+   `chezmoi init https://github.com/findix/dotfiles.git`
+8. 可选：先检查依赖状态
    `~/.local/share/chezmoi/scripts/check-prereqs.sh`
-6. 应用配置
+9. 应用配置
    `chezmoi apply`
+10. 安装 tmux TPM 插件管理器
+   `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
+11. 安装 tmux 插件
+   `bash ~/.tmux/plugins/tpm/bin/install_plugins`
+
+说明：
+Linux 下 Git 使用 `credential.helper=store`。如果需要保存 PAT，可以在本机自行写入 `~/.git-credentials`。
 
 ## tmux
 
@@ -76,7 +106,7 @@ bash ~/.tmux/plugins/tpm/bin/install_plugins
 
 如果 `bw` 未安装或未登录，可以先运行 `~/.local/share/chezmoi/scripts/check-prereqs.sh` 获取提示，再继续处理 secret 相关配置。
 
-当前已经接入一个真实场景：GitHub 的 Git credential helper。
+当前已经接入一个真实场景：macOS 下 GitHub 的 Git credential helper。
 
 在执行 `git push`、`git pull` 之前，先在当前 shell 解锁并导出 session：
 
@@ -84,4 +114,4 @@ bash ~/.tmux/plugins/tpm/bin/install_plugins
 export BW_SESSION="$(bw unlock --raw)"
 ```
 
-之后 Git 会通过 `~/.local/bin/git-credential-bitwarden` 从 Bitwarden 的 `github.com` 条目读取凭据。
+之后 Git 会通过 `~/.local/bin/git-credential-bitwarden` 从 Bitwarden 的 `github.com PAT` 条目读取凭据。
