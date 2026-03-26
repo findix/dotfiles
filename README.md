@@ -9,6 +9,7 @@
 - `~/.zshrc`
 - `~/.zprofile`
 - `~/.gitconfig`
+- `~/.p10k.zsh`
 - `~/.tmux.conf`
 - `~/.vimrc`
 - `~/.ssh/config`
@@ -61,7 +62,7 @@
    `bash ~/.tmux/plugins/tpm/bin/install_plugins`
 
 说明：
-当前仓库没有纳管 `~/.p10k.zsh`。如果新机器没有这个文件，Powerlevel10k 主题可以正常加载，但提示符细节需要你自己运行 `p10k configure` 生成。
+当前仓库已经纳管 `~/.p10k.zsh`，`chezmoi apply` 后会直接还原 Powerlevel10k 配置。
 
 ### Linux
 
