@@ -151,7 +151,7 @@ bash ~/.tmux/plugins/tpm/bin/install_plugins
 
 - 仓库里只纳管公钥 `~/.ssh/id_ed25519.pub`
 - `~/.ssh/config` 会优先对 `github.com` 和 `codeup.aliyun.com` 使用这把 key
-- bootstrap 或手动执行 `~/.local/bin/restore-ssh-key-from-bitwarden` 时，会从 Bitwarden 恢复私钥到 `~/.ssh/id_ed25519`
+- bootstrap、`chezmoi apply`、`chezmoi update` 或手动执行 `~/.local/bin/restore-ssh-key-from-bitwarden` 时，会从 Bitwarden 恢复私钥到 `~/.ssh/id_ed25519`
 - 如果当前终端可交互，恢复脚本会自动尝试 `bw login` / `bw unlock`
 
 如果你要把这把新公钥加到平台上，可以直接使用：

@@ -1,0 +1,16 @@
+#!/bin/sh
+# chezmoi apply/update 后自动尝试从 Bitwarden 恢复或刷新 ed25519 SSH 私钥。
+
+set -eu
+
+helper="${HOME}/.local/bin/restore-ssh-key-from-bitwarden"
+
+if [ ! -x "$helper" ]; then
+  exit 0
+fi
+
+if ! command -v bw >/dev/null 2>&1; then
+  exit 0
+fi
+
+"$helper" || true

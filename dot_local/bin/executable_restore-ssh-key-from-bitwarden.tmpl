@@ -22,7 +22,7 @@ ensure_bw_session() {
       return
       ;;
     *'"status":"unauthenticated"'*)
-      if [ -r /dev/tty ]; then
+      if [ -t 2 ]; then
         bw login </dev/tty >/dev/tty 2>/dev/tty || true
       fi
       ;;
@@ -34,7 +34,7 @@ ensure_bw_session() {
       return
       ;;
     *'"status":"locked"'*|*'"status":"unauthenticated"'*)
-      if [ -r /dev/tty ]; then
+      if [ -t 2 ]; then
         BW_SESSION="$(bw unlock --raw </dev/tty 2>/dev/tty)"
         export BW_SESSION
         return
