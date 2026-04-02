@@ -17,6 +17,7 @@ git:
 bitwarden:
   items:
     github_pat: "github.com PAT"
+    ssh_ed25519: "ssh-ed25519"
 
 hosts:
   Seans-MacBook-Pro:

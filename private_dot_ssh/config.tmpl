@@ -7,3 +7,12 @@
 Include ~/.orbstack/ssh/config
 {{- end }}
 {{- end }}
+
+Host github.com codeup.aliyun.com
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+  AddKeysToAgent yes
+{{- if eq .chezmoi.os "darwin" }}
+  IgnoreUnknown UseKeychain
+  UseKeychain yes
+{{- end }}

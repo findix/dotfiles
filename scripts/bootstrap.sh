@@ -325,6 +325,13 @@ install_tmux_plugins() {
   fi
 }
 
+restore_ssh_key() {
+  if [ -x "${HOME}/.local/bin/restore-ssh-key-from-bitwarden" ] && has_cmd bw; then
+    log "从 Bitwarden 恢复 ed25519 SSH 私钥"
+    "${HOME}/.local/bin/restore-ssh-key-from-bitwarden" || true
+  fi
+}
+
 main() {
   install_base_packages
   install_chezmoi
@@ -336,6 +343,7 @@ main() {
   setup_bitwarden_session
   run_chezmoi
   preview_and_apply_chezmoi
+  restore_ssh_key
   install_tmux_plugins
   log "完成。建议重新打开 shell。"
 }

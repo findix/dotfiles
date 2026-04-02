@@ -13,6 +13,7 @@
 - `~/.tmux.conf`
 - `~/.vimrc`
 - `~/.ssh/config`
+- `~/.ssh/id_ed25519.pub`
 - `~/.local/bin/env`
 - `~/.config/btop/btop.conf`
 
@@ -145,3 +146,17 @@ export BW_SESSION="$(bw unlock --raw)"
 ```
 
 之后 Git 会通过 `~/.local/bin/git-credential-bitwarden` 从 Bitwarden 的 `github.com PAT` 条目读取凭据。
+
+### SSH 私钥
+
+`ed25519` SSH 私钥不进入 Git 仓库，而是保存在 Bitwarden 的 `ssh-ed25519` 条目里。
+
+- 仓库里只纳管公钥 `~/.ssh/id_ed25519.pub`
+- `~/.ssh/config` 会优先对 `github.com` 和 `codeup.aliyun.com` 使用这把 key
+- bootstrap 或手动执行 `~/.local/bin/restore-ssh-key-from-bitwarden` 时，会从 Bitwarden 恢复私钥到 `~/.ssh/id_ed25519`
+
+如果你要把这把新公钥加到平台上，可以直接使用：
+
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
