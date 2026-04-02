@@ -11,10 +11,42 @@ if ! command -v bw >/dev/null 2>&1; then
   exit 1
 fi
 
-if [ -z "${BW_SESSION:-}" ]; then
-  echo "restore-ssh-key: BW_SESSION 未设置，请先执行 bw unlock --raw 并导出环境变量" >&2
-  exit 1
-fi
+ensure_bw_session() {
+  if [ -n "${BW_SESSION:-}" ]; then
+    return
+  fi
+
+  status="$(bw status 2>/dev/null || true)"
+  case "$status" in
+    *'"status":"unlocked"'*)
+      return
+      ;;
+    *'"status":"unauthenticated"'*)
+      if [ -r /dev/tty ]; then
+        bw login </dev/tty >/dev/tty 2>/dev/tty || true
+      fi
+      ;;
+  esac
+
+  status="$(bw status 2>/dev/null || true)"
+  case "$status" in
+    *'"status":"unlocked"'*)
+      return
+      ;;
+    *'"status":"locked"'*|*'"status":"unauthenticated"'*)
+      if [ -r /dev/tty ]; then
+        BW_SESSION="$(bw unlock --raw </dev/tty 2>/dev/tty)"
+        export BW_SESSION
+        return
+      fi
+
+      echo "restore-ssh-key: Bitwarden 未解锁，且当前无法交互输入，请先手动执行 bw unlock 或设置 BW_SESSION" >&2
+      exit 1
+      ;;
+  esac
+}
+
+ensure_bw_session
 
 item_json="$(bw list items --search "$item_name" | jq -cer --arg name "$item_name" 'map(select(.name == $name))[0]')"
 private_key="$(printf '%s' "$item_json" | jq -r '.notes')"

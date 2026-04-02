@@ -139,11 +139,9 @@ bash ~/.tmux/plugins/tpm/bin/install_plugins
 
 当前已经接入一个真实场景：macOS 下 GitHub 的 Git credential helper。
 
-在执行 `git push`、`git pull` 之前，先在当前 shell 解锁并导出 session：
+默认情况下，`git push` / `git pull` 和 SSH 私钥恢复脚本会优先尝试自动调用 `bw login` / `bw unlock`，你不需要先手动 `export BW_SESSION`。
 
-```bash
-export BW_SESSION="$(bw unlock --raw)"
-```
+只有在非交互环境里，脚本无法弹出输入时，才需要你手动先准备好 `BW_SESSION`。
 
 之后 Git 会通过 `~/.local/bin/git-credential-bitwarden` 从 Bitwarden 的 `github.com PAT` 条目读取凭据。
 
@@ -154,6 +152,7 @@ export BW_SESSION="$(bw unlock --raw)"
 - 仓库里只纳管公钥 `~/.ssh/id_ed25519.pub`
 - `~/.ssh/config` 会优先对 `github.com` 和 `codeup.aliyun.com` 使用这把 key
 - bootstrap 或手动执行 `~/.local/bin/restore-ssh-key-from-bitwarden` 时，会从 Bitwarden 恢复私钥到 `~/.ssh/id_ed25519`
+- 如果当前终端可交互，恢复脚本会自动尝试 `bw login` / `bw unlock`
 
 如果你要把这把新公钥加到平台上，可以直接使用：
 
