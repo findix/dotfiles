@@ -126,6 +126,10 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 . "$HOME/.local/bin/env"
 
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
 {{- with $host }}
 {{- if .enable_lmstudio }}
 # Added by LM Studio CLI (lms)
